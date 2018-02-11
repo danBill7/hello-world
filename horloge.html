@@ -1,0 +1,167 @@
+<!--Ce programme utilise le language javascript pour creer une horloge animée
+qui donne l'heure de l'ordinateur-->
+
+<html>
+  <head>
+    <title>Horloge</title>
+    <script type="text/javascript">  
+<!--pour commencer un programme javascript on écrit toujours cette ligne-->
+document.onmousemove=getMousePos;
+var posX=0,posY=0;
+function getMousePos(e) {
+if (document.all) {
+posX=event.clientX;
+posY=event.clientY;
+}else{
+posX=e.pageX;
+posY=e.pageY;
+}
+document.title="position souris ("+posX+", "+posY+")";
+}	                                      
+   
+
+function init(){
+  clock();
+  setInterval(clock,1000);
+ 
+  }
+  
+//la fonction init() initialise l'animation en appelant la fonction clock()
+//    toute les 1000 millisecondes, c'est-a-dire toutes les secondes 
+
+
+function clock(){
+  var now = new Date();
+  //on va chercher l'heure actuelle
+  var ctx = document.getElementById('tutorial').getContext('2d');
+  //on pose le canvas qui est le fond sur lequel on dessine 
+  ctx.save();
+  //et on enregistre ses caractéristiques
+  ctx.clearRect(0,0,690,410);
+ctx.strokeStyle = "white";
+ ctx.lineWidth=1;
+  ctx.beginPath();
+ ctx.moveTo(0,0);
+  ctx.lineTo(690,0);
+  ctx.lineTo(690,410);
+  ctx.lineTo(0,410);
+  ctx.lineTo(0,0);
+  ctx.stroke();
+  //ctx.save();
+  // on remet le canvas a blanc avant de dessiner une nouvelle vue 'frame'
+  ctx.translate(505,225);
+  ctx.scale(1.2,1.2);
+  ctx.rotate(-Math.PI/2);
+  ctx.strokeStyle = "black";
+  ctx.fillStyle = "white";
+  ctx.lineWidth = 8;
+  ctx.lineCap = "round";
+  // on initialise en position, échelle ,angle ; couleur de ligne de dessin, couleur
+  //de remplissage, épaisseur de ligne, et nature du trait (arrondi aux extremités)
+
+<!--dessin du fond d'horloge et des marques des heures-->
+  
+  
+  
+  ctx.save();
+  ctx.beginPath();
+  ctx.lineWidth = 14;
+  ctx.strokeStyle = "orange";
+  ctx.arc(0,0,142,0,Math.PI*2,true);// on défini le cercle de l'horloge
+  ctx.fillStyle = "white";
+  ctx.fill();//on remplit l'écran en blanc
+  ctx.stroke();//on trace le bord en orange
+  ctx.strokeStyle = "black";
+  for (var i=0;i<12;i++){
+    ctx.beginPath();
+    ctx.rotate(Math.PI/6);//on définit les positions des heures,(tous les 30°)
+    ctx.moveTo(100,0);
+    ctx.lineTo(120,0);
+    ctx.stroke();//on trace en noir , de 20 pixels
+  }
+  ctx.restore();
+
+<!--dessin des marques des minutes-->
+  
+  
+  ctx.save();
+  
+  ctx.lineWidth = 5;
+  
+  for (i=0;i<60;i++){
+    if (i%5!=0) {     //si le reste de i divisé par 5 est différend de zéro
+      ctx.beginPath();
+      ctx.moveTo(117,0);
+      ctx.lineTo(120,0);
+      ctx.stroke();
+    }
+    ctx.rotate(Math.PI/30);
+  }
+  ctx.restore();
+  
+  var sec = now.getSeconds();
+  var min = now.getMinutes();
+  var hr  = now.getHours();
+  hr = hr>=12 ? hr-12 : hr;
+  ctx.fillStyle = "black";
+
+  // on dessine l'aiguille des heures
+  ctx.save();
+  ctx.rotate( hr*(Math.PI/6) + (Math.PI/360)*min + (Math.PI/21600)*sec )
+  ctx.lineWidth = 14;
+  ctx.beginPath();
+  ctx.moveTo(-20,0);
+  ctx.lineTo(80,0);
+  ctx.stroke();
+  ctx.restore();
+
+  // on dessine l'aiguille des minutes
+  ctx.save();
+  ctx.rotate( (Math.PI/30)*min + (Math.PI/1800)*sec )
+  ctx.lineWidth = 14;
+  ctx.beginPath();
+  ctx.moveTo(-28,0);
+  ctx.lineTo(104,0);
+  ctx.stroke();
+  ctx.restore();
+  
+  // on dessine l'aiguille des secondes
+  ctx.save();
+  ctx.rotate(sec * Math.PI/30);
+  ctx.strokeStyle = "#D40000";
+  ctx.fillStyle = "#D40000";
+  ctx.lineWidth = 6;
+  ctx.beginPath();
+  ctx.moveTo(-30,0);
+  ctx.lineTo(83,0);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.arc(0,0,10,0,Math.PI*2,true);
+  ctx.fill();
+  ctx.beginPath();
+  ctx.arc(95,0,10,0,Math.PI*2,true);
+  ctx.stroke();
+  ctx.fillStyle = "rgba(0,0,0,0)";
+  ctx.arc(0,0,3,0,Math.PI*2,true);
+  ctx.fill();
+  ctx.restore();
+   ctx.restore();
+ 
+  
+}
+
+    </script>
+    <style type="text/css">
+      canvas { background-color: #5f5f5f; }
+	 
+	body {
+		
+		background-color: #5f5f5f;
+	}
+	
+    </style>
+  </head>
+  <body onload="init();">
+    <canvas id="tutorial" width="690" height="410"></canvas>
+  </body>
+</html>
